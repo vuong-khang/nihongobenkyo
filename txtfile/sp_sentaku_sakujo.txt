@@ -1,0 +1,45 @@
+﻿CREATE PROCEDURE sp_sentaku_sakujyo
+(
+    IN para_index VARCHAR(20)
+)
+
+DELETE JISHO, MASU, TE, KAKO, HITEI, KANO, ISHI, JYOKEN, MEIREI, KINSHI, UKEMI, SHIEKI, SHIEKIUKEMI
+FROM ma_jishokei JISHO
+
+LEFT JOIN ma_masukei MASU
+ON JISHO.index = MASU.index
+
+LEFT JOIN ma_tekei TE
+ON JISHO.index = TE.index
+
+LEFT JOIN ma_kakokei KAKO
+ON JISHO.index = KAKO.index
+
+LEFT JOIN ma_hiteikei HITEI
+ON JISHO.index = HITEI.index
+
+LEFT JOIN ma_kanokei KANO
+ON JISHO.index = KANO.index
+
+LEFT JOIN ma_ishikei ISHI
+ON JISHO.index = ISHI.index
+
+LEFT JOIN ma_jyokenkei JYOKEN
+ON JISHO.index = JYOKEN.index
+
+LEFT JOIN ma_meireikei MEIREI
+ON JISHO.index = MEIREI.index
+
+LEFT JOIN ma_kinshikei KINSHI
+ON JISHO.index = KINSHI.index
+
+LEFT JOIN ma_ukemikei UKEMI
+ON JISHO.index = UKEMI.index
+
+LEFT JOIN ma_shiekikei SHIEKI
+ON JISHO.index = SHIEKI.index
+
+LEFT JOIN ma_shiekiukemikei SHIEKIUKEMI
+ON JISHO.index = SHIEKIUKEMI.index
+
+WHERE JISHO.index = para_index

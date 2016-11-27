@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  ma_jyokenkei: MyString
+  index: MyString
+  kotoba_kj: MyString
+  kotoba_hira: MyString
+  dt_create: 2016-11-14 19:50:01
+  dt_update: 2016-11-14 19:50:01
+
+two:
+  ma_jyokenkei: MyString
+  index: MyString
+  kotoba_kj: MyString
+  kotoba_hira: MyString
+  dt_create: 2016-11-14 19:50:01
+  dt_update: 2016-11-14 19:50:01

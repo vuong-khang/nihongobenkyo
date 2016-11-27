@@ -1,0 +1,29 @@
+<%= provide(:title, "ホーム") %>
+
+<!-- Header content -->
+<section class="content-header">  
+  <h1>ホーム</h1>
+
+  <ol class="breadcrumb">
+    <li><%= link_to "<i class='fa fa-home'></i> ホーム".html_safe, home_path %></li>
+  </ol>
+</section>
+    
+<!-- Main content -->
+<section class="content">
+  <div class="row">
+  	<% @page.each do |item| %>
+  	<div class="col-lg-3 col-xs-6">
+  	  <div class="small-box bg-aqua">
+      	<div class="inner">
+      	  <h3><%= item["header_jp"].html_safe %></h3>
+        </div>
+      	<div class="icon">
+      	  <i class="fa <%= item["icon"] %>"></i>
+      	</div>
+      	<%= link_to "ページに入る <i class='fa fa-arrow-circle-right'></i>".html_safe, eval(item["path"]), id: item["text"], class: "small-box-footer" %>
+  	  </div>
+  	</div>
+  	<% end %>
+  </div>
+</section>

@@ -1,0 +1,5 @@
+$("#message #show_message").append("<%= j (render 'sentaku_sakujyo_message') %>")
+$("#show_message .alert").delay(3000).fadeOut();
+
+$("#result .overlay").remove();
+$("#condition #kensaku")[0].click();

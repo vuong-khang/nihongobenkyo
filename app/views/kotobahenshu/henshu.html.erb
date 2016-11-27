@@ -1,0 +1,48 @@
+<%= provide(:title, "修正") %>
+
+<!-- Header content -->
+<section class="content-header">  
+  <h1>言葉編集</h1>
+
+  <ol class="breadcrumb">
+    <li><%= link_to "<i class='fa fa-home'></i> ホーム".html_safe, home_path %> </li>
+    <li><%= link_to @page.select {|item| item["id"] == 1}[0]['title_jp'].html_safe, kotoba_path %></li>
+    <li class="active">言葉編集</li>
+  </ol>
+</section>
+    
+<!-- Main content -->
+<section class="content">
+  <div class="row" id="henshu">
+    <div class="col-md-12">
+      <div class="box box-primary">
+        <div class="box-header with-border">
+          <h3 class="box-title">
+            <%= link_to "<i class='fa fa-arrow-left'></i>".html_safe, kotoba_kensaku_path, id:"modoru", class: "btn btn-default" %>  
+            <strong><%= @shosa_mode.select {|item| item["value"] == params[:mode]}[0]["title_jp"] %></strong>
+          </h3>            
+          <div class="box-tools pull-right">
+            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+            </button>
+          </div>
+        </div>
+        <div class="box-body">
+          <%= render "henshu_form" %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row" id="fix_height">    
+  </div>
+
+  <div class="row" id="message">
+    <div class="col-md-12">
+      <div id="show_message" class="float-on-outer"></div>
+    </div>
+  </div>
+</section>
+
+<script type="text/javascript">
+  $(".sidebar-menu #<%= @page[1]["text"] %>").addClass("active");
+</script>

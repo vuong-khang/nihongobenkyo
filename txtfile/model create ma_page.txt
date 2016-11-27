@@ -1,0 +1,1 @@
+rails generate model ma_page id:integer header_jp:string header_en:string header_vi:string title_jp:string title_en:string title_vi:string icon:string path:string parent_id:integer

@@ -1,0 +1,232 @@
+<%= provide(:title, "検索結果") %>
+<%= stylesheet_link_tag    "plugins/datatables/dataTables.bootstrap", media: "all", "data-turbolinks-track" => true %>
+<%= javascript_include_tag "plugins/datatables/jquery.dataTables.min", "data-turbolinks-track" => true %>
+<%= javascript_include_tag "plugins/datatables/dataTables.bootstrap.min", "data-turbolinks-track" => true %>
+
+<!-- Header content -->
+<section class="content-header">  
+  <h1><%= @page.select {|item| item["id"] == 1}[0]["title_jp"] %></h1>
+
+  <ol class="breadcrumb">
+    <li><%= link_to "<i class='fa fa-home'></i> ホーム".html_safe, home_path %> </li>
+    <li class="active"><%= @page.select {|item| item["id"] == 1}[0]["title_jp"] %></li>
+  </ol>
+</section>
+    
+<!-- Main content -->
+<section class="content">
+  <div class="row" id="condition">
+    <div class="col-md-12">
+      <div class="box box-primary">
+        <div class="box-header with-border">
+          <h3 class="box-title"><strong>検索条件</strong></h3>
+          <div class="box-tools pull-right">
+            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+            </button>
+          </div>
+        </div>
+        <div class="box-body">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="row">
+                <div class="col-md-6">  
+                  <div class="form-group">
+                    <label for="search_kotoba">言葉</label>
+                    <%= text_field_tag :search_kotoba, params[:search_kotoba], class: "form-control ime-active", placeholder: "#{@app_msg["AP0001"]}" %>
+                    <span class="help-block">&nbsp;</span>
+                  </div>
+                  <div class="form-group">
+                    <label for="search_doshi_group">グループ</label>
+                    <%= select_tag "search_doshi_group", options_for_select(@doshi_group.map {|item| [item["title_jp"], item["value"]]}, params[:search_doshi_group]), {class: "form-control", style: "width: 30%", include_blank: true} %>
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label>
+                      <%= check_box_tag("zen_search_kei") %>&nbsp;
+                      形選択                              
+                    </label>
+                    <div class="row">
+                     <% @doshi_kei.drop(1).each_with_index do |kei, index| %>
+                        <% if (index % 4 == 0) %>
+                        <div class="col-md-4">
+                        <% end %>
+                        <div class="checkbox">
+                          <label>
+                            <% if !cookies[:search_kei].nil? %>
+                              <%= cookies[:search_kei].include?(kei["value"].to_i)? check_box_tag("search_kei[]", kei["value"], checked: true) : check_box_tag("search_kei[]", kei["value"]) %>
+                            <% else %>
+                              <%= check_box_tag("search_kei[]", kei["value"]) %>
+                            <% end %>
+                            <%= kei["title_jp"] %>
+                          </label>
+                        </div>
+                        <% if (index % 4 == 3) %>
+                        </div>
+                        <% end %>
+                      <% end %>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>            
+
+        <div class="box-footer">
+          <div class="pull-right">
+            <%= link_to "<i class='fa fa-search'></i> 検索".html_safe, kotoba_kensaku_path, id:"kensaku", class: "btn btn-primary", remote: true %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row" id="result">
+    <div class="col-md-12">
+      <div class="box box-primary">
+        <div class="box-header with-border">
+          <h3 class="box-title"><strong>検索結果</strong></h3>
+          <div class="box-tools pull-right">
+            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+            </button>
+          </div>
+        </div>
+        <div class="box-body" id="show_result">
+          <span id="MS0002"><%= "#{@base_msg["MS0002"]}" %></span>
+          <%= link_to "<i class='fa fa-plus'></i> 追加".html_safe, kotoba_henshu_path(mode: @shosa_mode[0]["value"]), id:"tsuika", class: "btn btn-default btn-sm" %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row" id="message">
+    <div class="col-md-12">
+      <div id="show_message" class="float-on-outer"></div>
+    </div>
+  </div>
+
+  <div class="modal modal-danger">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">エラー</h4>
+        </div>
+        <div class="modal-body">
+          <span id="message"></span>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline pull-left" style="display: none" id="save">保存</button>
+          <button type="button" class="btn btn-outline" data-dismiss="modal" id="close">閉じる</button>          
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  $(".sidebar-menu #<%= @page.select {|item| item["id"] == 1}[0]["id"] %>").addClass("active");
+
+  $("[data-toggle='tooltip']").tooltip();
+
+  if (getParameterByName("auto_search") == null || getParameterByName("auto_search") == "false") {
+    $("#condition #search_kotoba").focus();
+  }
+
+  if (getParameterByName("auto_search") == "true" || "<%= flash[:auto_search] %>" == "true") {
+    var new_href = "<%= kotoba_kensaku_path %>?";
+        criteria = [];
+        search_kotoba = $("#condition #search_kotoba").val().trim(),
+        search_doshi_group = $("#condition #search_doshi_group").val(),
+        search_kei = $("#condition #search_kei_:checked").map(function () {
+                          return this.value;
+                        }).get();
+
+    criteria.push("auto_search=true");
+
+    if (search_kotoba != "") {
+      criteria.push("search_kotoba=" + search_kotoba);      
+    }
+
+    if (search_doshi_group.length > 0) {
+      criteria.push("search_doshi_group=" + search_doshi_group);      
+    }
+
+    if (search_kei.length > 0) {
+      criteria.push("search_kei=" + JSON.stringify(search_kei));
+    }
+
+    $("#condition #kensaku").attr("href", new_href + criteria.join("&"));    
+    $("#condition #kensaku")[0].click();
+
+    $("#condition #zen_search_kei").prop("checked", $("#condition #search_kei_:checkbox:checked").length == $("#condition #search_kei_:checkbox").length);
+  }
+
+  $("#result #show_result #MS0002").text($("#result #show_result #MS0002").text().replace("{0}", $("#condition #kensaku").text()));
+
+  $("#condition #zen_search_kei").change(function () {
+    $("#condition #search_kei_:checkbox").prop("checked", $(this).prop("checked"));
+  });
+
+  $("#condition #search_kei_").change(function () {
+    $("#condition #zen_search_kei").prop("checked", $("#condition #search_kei_:checkbox:checked").length == $("#condition #search_kei_:checkbox").length);
+  });
+
+  function validate_search_kotoba(element) {
+    var max_byte_length = 50,
+        zenkaku_regex = /^$|^[一-龠ぁ-んァ-ン]+$/,
+        search_kotoba = element.val().trim();
+
+    if (search_kotoba.length > max_byte_length) {
+      element.closest(".form-group").addClass("has-error");
+      element.siblings(".help-block").text("<%= @val_msg["VL0003"] %>".replace("{0}", max_byte_length));
+      return false;
+    }
+    else if (!zenkaku_regex.test(search_kotoba)) {
+      element.closest(".form-group").addClass("has-error"); 
+      element.siblings(".help-block").text("<%= @val_msg["VL0006"] %>");
+      return false;
+    }
+    else {
+      element.closest(".form-group").removeClass("has-error"); 
+      element.siblings(".help-block").html("&nbsp;");
+      return true;
+    }
+  }
+
+  $("#condition #search_kotoba").change(function () {
+    validate_search_kotoba($(this));
+  });
+
+  $("#condition #kensaku").click(function() {
+    if (validate_search_kotoba($("#condition #search_kotoba"))) {
+      var new_href = "<%= kotoba_kensaku_path %>?",
+          criteria = [];
+          search_kotoba = $("#condition #search_kotoba").val().trim(),
+          search_doshi_group = $("#condition #search_doshi_group").val(),
+          search_kei = $("#condition #search_kei_:checked").map(function () {
+                            return this.value;
+                          }).get();
+
+      criteria.push("auto_search=true");
+
+      if (search_kotoba != "") {
+        criteria.push("search_kotoba=" + search_kotoba);
+      }
+
+      if (search_doshi_group.length > 0) {
+        criteria.push("search_doshi_group=" + search_doshi_group);      
+      }
+
+      if (search_kei.length > 0) {
+        criteria.push("search_kei=" + JSON.stringify(search_kei));
+      }
+
+      $(this).attr("href", new_href + criteria.join("&"));
+      $(this).find("i").removeClass("fa-search").addClass("fa-spinner");
+    }
+  });
+</script>

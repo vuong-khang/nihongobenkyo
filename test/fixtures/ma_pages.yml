@@ -1,0 +1,25 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  id: 1
+  header_jp: MyString
+  header_en: MyString
+  header_vi: MyString
+  title_jp: MyString
+  title_en: MyString
+  title_vi: MyString
+  icon: MyString
+  path: MyString
+  parent_id: 1
+
+two:
+  id: 1
+  header_jp: MyString
+  header_en: MyString
+  header_vi: MyString
+  title_jp: MyString
+  title_en: MyString
+  title_vi: MyString
+  icon: MyString
+  path: MyString
+  parent_id: 1

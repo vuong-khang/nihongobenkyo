@@ -1,0 +1,478 @@
+<div class="row" id="henshu_form">
+  <div class="col-md-12">
+    <div class="nav-tabs-custom">
+      <ul class="nav nav-tabs">        
+        <li class="active"><a href="#nyuryoku" data-toggle="tab">入力</a></li>
+        <% if params[:mode] == @shosa_mode[0]["value"] %>
+        <li><a href="#csv_upload" data-toggle="tab">CSVアップロード</a></li>
+        <% end %>
+      </ul>
+
+      <div class="tab-content">
+        <div class="tab-pane active" id="nyuryoku">
+          <%= form_tag(kotoba_hozon_path(mode: params[:mode], index: params[:mode] == @shosa_mode[0]["value"] ? nil : @kotoba.index), method: "get", id: "kotoba_henshu", class: "form-horizontal", remote: true) do %>
+          <div class="form-group">
+            <label for="input_doshi_group" class="col-md-2 control-label">グループ</label>
+            <div class="col-md-2">
+              <%= select_tag "input_doshi_group", options_for_select(@doshi_group.map {|item| [item["title_jp"], item["value"]]}, params[:mode] == @shosa_mode[0]["value"] ? nil : @kotoba.group), {class: "form-control"} %>
+            </div>
+            <div class="col-md-3">
+            </div>
+            <div class="col-md-5">
+              <span id="msg_input_doshi_group"></span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <% if params[:mode] != @shosa_mode[0]["value"] %>
+            <%= hidden_field_tag 'index', @kotoba.index %>
+            <% end %>
+            <label for="input_kotoba_kj" class="col-md-2 control-label">言葉（漢字）</label>         
+            <div class="col-md-4">
+              <%= text_field_tag :input_kotoba_kj, params[:input_kotoba_kj], class: "form-control ime-active", placeholder: "#{@app_msg["AP0003"]}", value: params[:mode] == @shosa_mode[0]["value"] ? nil : @kotoba.kotoba_kj %>
+            </div>
+            <div class="col-md-6">
+              <span class="help-block">&nbsp;</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="input_kotoba_hira" class="col-md-2 control-label">言葉（ひらがな）</label>
+            <div class="col-md-4">
+              <%= text_field_tag :input_kotoba_hira, params[:input_kotoba_hira], class: "form-control ime-active", placeholder: "#{@app_msg["AP0004"]}", value: params[:mode] == @shosa_mode[0]["value"] ? nil : @kotoba.kotoba_hira %>
+            </div>
+            <div class="col-md-6">
+              <span class="help-block">&nbsp;</span>
+            </div>
+          </div>
+
+          <div class="box-footer">
+            <div class="pull-right" id="pane_nyuryoku">
+              <%= button_tag(type: "button", class: "btn btn-primary", id: "hozon") do %>
+                <i class="fa fa-save"></i> 保存
+              <% end %>
+              <% if params[:mode] != @shosa_mode[0]["value"] %>
+              <%= link_to "<i class='fa fa-remove'></i> 削除".html_safe, kotoba_hozon_path(mode: @shosa_mode[2]["value"], index: params[:index]), id:"sakujo", class: "btn btn-primary" %>
+              <% end %>
+            </div>
+          </div>
+          <% end %>                        
+        </div>
+
+        <% if params[:mode] == @shosa_mode[0]["value"] %>
+        <div class="tab-pane" id="csv_upload">
+          <%= form_tag(kotoba_csv_upload_path, multipart: true, id: "form_csv_upload", class: "form-horizontal", remote: true, authenticity_token: true) do %>
+          <div class="form-group">
+            <label for="csv_upload" class="col-md-2 control-label">ファイル</label>
+            <div class="col-md-5">
+              <%= file_field_tag :csv_file, accept: ".csv" %>
+            </div>
+            <div class="col-md-5">
+              <span class="help-block">&nbsp;</span>
+            </div>
+          </div>
+          <div class="box-footer">
+            <div class="pull-right" id="pane_csv_upload">
+              <%= button_tag(type: "button", class: "btn btn-primary", id: "upload") do %>
+                <i class="fa fa-upload"></i> アップロード
+              <% end %>
+            </div>
+          </div>
+          <% end %>
+        </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  $("#henshu_form #kotoba_henshu #input_doshi_group").focus();  
+  $("#henshu_form #pane_csv_upload").hide();
+
+  $("#henshu_form .nav-tabs-custom .nav-tabs li").click(function() {
+    switch($(this).find("a").attr("href")) {
+      case "#nyuryoku":
+          $("#henshu_form #pane_nyuryoku").show();
+          $("#henshu_form #pane_csv_upload").hide();          
+        break;
+      case "#csv_upload":
+          $("#henshu_form #pane_csv_upload").show();
+          $("#henshu_form #pane_nyuryoku").hide();
+        break;
+    }
+
+    $("#henshu_form .tab-content").not($(this).find("a").attr("href")).find("input").closest(".form-group").removeClass("has-error").closest(".form-group").find(".help-block").html("&nbsp;");
+  });
+
+  if (getParameterByName("index")) {
+    var kotoba_kj = "<%= @kotoba.nil? ? "" : @kotoba.kotoba_kj %>",
+        kotoba_hira = "<%= @kotoba.nil? ? "" : @kotoba.kotoba_hira %>",
+        group = "<%= @kotoba.nil? ? "" : @kotoba.group %>";
+
+    $("#henshu_form #kotoba_henshu #input_kotoba_kj").val(kotoba_kj);
+    $("#henshu_form #kotoba_henshu #input_kotoba_hira").val(kotoba_hira);
+    $("#henshu_form #kotoba_henshu #input_group").val(group);
+  }
+
+  function convert_hiragana_settings() {
+    var array = new Array();
+
+    array.push(<%= raw @hiragana[0].as_json %>);
+    array.push(<%= raw @hiragana[1].as_json %>);
+    array.push(<%= raw @hiragana[2].as_json %>);
+    array.push(<%= raw @hiragana[3].as_json %>);
+    array.push(<%= raw @hiragana[4].as_json %>);
+    array.push(<%= raw @hiragana[5].as_json %>);
+    array.push(<%= raw @hiragana[6].as_json %>);
+    array.push(<%= raw @hiragana[7].as_json %>);
+    array.push(<%= raw @hiragana[8].as_json %>);
+    array.push(<%= raw @hiragana[9].as_json %>);
+    array.push(<%= raw @hiragana[10].as_json %>);
+    array.push(<%= raw @hiragana[11].as_json %>);
+    array.push(<%= raw @hiragana[12].as_json %>);
+    array.push(<%= raw @hiragana[13].as_json %>);
+    array.push(<%= raw @hiragana[14].as_json %>);
+    array.push(<%= raw @hiragana[15].as_json %>);
+    array.push(<%= raw @hiragana[16].as_json %>);
+    array.push(<%= raw @hiragana[17].as_json %>);
+    array.push(<%= raw @hiragana[18].as_json %>);
+    array.push(<%= raw @hiragana[19].as_json %>);
+    array.push(<%= raw @hiragana[20].as_json %>);
+    array.push(<%= raw @hiragana[21].as_json %>);
+    array.push(<%= raw @hiragana[22].as_json %>);
+    array.push(<%= raw @hiragana[23].as_json %>);
+    array.push(<%= raw @hiragana[24].as_json %>);
+    array.push(<%= raw @hiragana[25].as_json %>);
+    array.push(<%= raw @hiragana[26].as_json %>);
+
+    return array;
+  }
+
+  function convert_katakana_settings() {
+    var array = new Array();
+
+    array.push(<%= raw @katakana[0].as_json %>);
+    array.push(<%= raw @katakana[1].as_json %>);
+    array.push(<%= raw @katakana[2].as_json %>);
+    array.push(<%= raw @katakana[3].as_json %>);
+    array.push(<%= raw @katakana[4].as_json %>);
+    array.push(<%= raw @katakana[5].as_json %>);
+    array.push(<%= raw @katakana[6].as_json %>);
+    array.push(<%= raw @katakana[7].as_json %>);
+    array.push(<%= raw @katakana[8].as_json %>);
+    array.push(<%= raw @katakana[9].as_json %>);
+    array.push(<%= raw @katakana[10].as_json %>);
+    array.push(<%= raw @katakana[11].as_json %>);
+    array.push(<%= raw @katakana[12].as_json %>);
+    array.push(<%= raw @katakana[13].as_json %>);
+    array.push(<%= raw @katakana[14].as_json %>);
+    array.push(<%= raw @katakana[15].as_json %>);
+    array.push(<%= raw @katakana[16].as_json %>);
+    array.push(<%= raw @katakana[17].as_json %>);
+    array.push(<%= raw @katakana[18].as_json %>);
+    array.push(<%= raw @katakana[19].as_json %>);
+    array.push(<%= raw @katakana[20].as_json %>);
+    array.push(<%= raw @katakana[21].as_json %>);
+    array.push(<%= raw @katakana[22].as_json %>);
+    array.push(<%= raw @katakana[23].as_json %>);
+    array.push(<%= raw @katakana[24].as_json %>);
+    array.push(<%= raw @katakana[25].as_json %>);
+    array.push(<%= raw @katakana[26].as_json %>);
+
+    return array;
+  }
+
+  function convert_doshi_reigai_group_1() {
+    var array = new Array();
+    
+    return array;
+  }
+
+  function convert_doshi_reigai_group_2() {
+    var array = new Array();
+
+    array.push(<%= raw @doshi_reigai[1]["kotoba"][0].as_json %>);
+    array.push(<%= raw @doshi_reigai[1]["kotoba"][1].as_json %>);
+    array.push(<%= raw @doshi_reigai[1]["kotoba"][2].as_json %>);
+    array.push(<%= raw @doshi_reigai[1]["kotoba"][3].as_json %>);
+    array.push(<%= raw @doshi_reigai[1]["kotoba"][4].as_json %>);
+    array.push(<%= raw @doshi_reigai[1]["kotoba"][5].as_json %>);
+    array.push(<%= raw @doshi_reigai[1]["kotoba"][6].as_json %>);
+    array.push(<%= raw @doshi_reigai[1]["kotoba"][7].as_json %>);
+    array.push(<%= raw @doshi_reigai[1]["kotoba"][8].as_json %>);
+    
+    return array;
+  }
+
+  function convert_doshi_reigai_group_3() {
+    var array = new Array();
+
+    array.push(<%= raw @doshi_reigai[2]["kotoba"][0].as_json %>);
+    
+    return array;
+  }
+
+  function validate_doshi_group(element, element_doshi_group, kotoba) {
+    var hiragana = convert_hiragana_settings(),
+        katakana = convert_katakana_settings(),
+        selected_value_group = element_doshi_group.val().trim(),
+        selected_text_group = element_doshi_group.find("option:selected").text().trim();
+
+    switch (selected_value_group) {
+      case "1":
+        var check_char = kotoba.substr(-1, 1),
+            sub_last_char = kotoba.substr(-2, 1),
+            index_hiragana = $.grep(hiragana, function(v,i) {
+                                return v[2] == check_char;
+                              })[0],
+            index_katakana = $.grep(katakana, function(v,i) {
+                                return v[2] == check_char;
+                              })[0],
+            index_sub_last_char_hiragana = $.grep(hiragana, function(v,i) {
+                                return v[3] == sub_last_char;
+                              })[0],
+            index_sub_last_char_katakana = $.grep(katakana, function(v,i) {
+                                return v[3] == sub_last_char;
+                              })[0];
+
+        index_hiragana = index_hiragana == undefined || index_hiragana == null ? null : index_hiragana.indexOf(check_char);
+        index_katakana = index_katakana == undefined || index_katakana == null ? null : index_katakana.indexOf(check_char);
+        index_sub_last_char_hiragana = index_sub_last_char_hiragana == undefined || index_sub_last_char_hiragana == null ? null : index_sub_last_char_hiragana.indexOf(sub_last_char);
+        index_sub_last_char_katakana = index_sub_last_char_katakana == undefined || index_sub_last_char_katakana == null ? null : index_sub_last_char_katakana.indexOf(sub_last_char);
+
+        if ((index_hiragana == <%= @alphabet_column.select {|item| item["text"] == "う_col"}[0]["value"] %> && index_sub_last_char_hiragana != <%= @alphabet_column.select {|item| item["text"] == "え_col"}[0]["value"] %>) ||
+            (index_katakana == <%= @alphabet_column.select {|item| item["text"] == "う_col"}[0]["value"] %> && index_sub_last_char_katakana != <%= @alphabet_column.select {|item| item["text"] == "え_col"}[0]["value"] %>)) {
+          element.closest(".form-group").removeClass("has-error"); 
+          element.closest(".form-group").find(".help-block").html("&nbsp;");
+          return true;
+        }
+        else {
+          element.closest(".form-group").addClass("has-error"); 
+          element.closest(".form-group").find(".help-block").text("<%= @val_msg["VL0010"] %>".replace("{0}", selected_text_group));
+          return false;
+        }
+        break;
+      case "2":
+        var check_char = kotoba.substr(-2, 1),
+            last_char = kotoba.substr(-1, 1),
+            ru_char_hiragana = hiragana[7][2],
+            ru_char_katakana = katakana[7][2],
+            doshi_reigai = convert_doshi_reigai_group_2(),
+            index_hiragana = $.grep(hiragana, function(v,i) {
+                                return v[3] == check_char;
+                              })[0],
+            index_katakana = $.grep(katakana, function(v,i) {
+                                return v[3] == check_char;
+                              })[0],
+            index_doshi_reigai_kj = $.grep(doshi_reigai, function(v,i) {
+                                return v[0] == kotoba;
+                              })[0];
+            index_doshi_reigai_hira = $.grep(doshi_reigai, function(v,i) {
+                                return v[1] == kotoba;
+                              })[0];
+
+        index_hiragana = index_hiragana == undefined || index_hiragana == null ? null : index_hiragana.indexOf(check_char);
+        index_katakana = index_katakana == undefined || index_katakana == null ? null : index_katakana.indexOf(check_char);
+
+        if ((index_hiragana == <%= @alphabet_column.select {|item| item["text"] == "え_col"}[0]["value"] %> && last_char == ru_char_hiragana) ||
+            (index_katakana == <%= @alphabet_column.select {|item| item["text"] == "え_col"}[0]["value"] %> && last_char == ru_char_katakana) ||
+            (index_doshi_reigai_kj != undefined && index_doshi_reigai_kj != null) ||
+            (index_doshi_reigai_hira != undefined && index_doshi_reigai_hira != null)) {
+          element.closest(".form-group").removeClass("has-error"); 
+          element.closest(".form-group").find(".help-block").html("&nbsp;");
+          return true;
+        }
+        else {
+          element.closest(".form-group").addClass("has-error"); 
+          element.closest(".form-group").find(".help-block").text("<%= @val_msg["VL0010"] %>".replace("{0}", selected_text_group));
+          return false;
+        }
+        break;
+      case "3":
+        var check_char = kotoba.substr(-2, 2),
+            suru_char_hiragana = hiragana[2][2] + hiragana[7][2],
+            sur_char_katakana = katakana[2][2] + katakana[7][2],
+            doshi_reigai = convert_doshi_reigai_group_3(),
+            index_doshi_reigai_kj = $.grep(doshi_reigai, function(v,i) {
+                                return v[0] == kotoba;
+                              })[0];
+            index_doshi_reigai_hira = $.grep(doshi_reigai, function(v,i) {
+                                return v[1] == kotoba;
+                              })[0];
+
+        if ((check_char == suru_char_hiragana) ||
+            (check_char == sur_char_katakana) ||
+            (index_doshi_reigai_kj != undefined && index_doshi_reigai_kj != null) ||
+            (index_doshi_reigai_hira != undefined && index_doshi_reigai_hira != null)) {
+          element.closest(".form-group").removeClass("has-error"); 
+          element.closest(".form-group").find(".help-block").html("&nbsp;");
+          return true;
+        }
+        else {
+          element.closest(".form-group").addClass("has-error"); 
+          element.closest(".form-group").find(".help-block").text("<%= @val_msg["VL0010"] %>".replace("{0}", selected_text_group));
+          return false;
+        }
+        return false;
+    }
+  }
+
+  function validate_input_kotoba_kj(element, element_doshi_group) {
+    var max_byte_length = 50,
+        zenkaku_regex = /^$|^[一-龠ぁ-んァ-ン]+$/,
+        input_kotoba = element.val().trim();
+
+    if (input_kotoba == null || input_kotoba.length == 0) {
+      element.closest(".form-group").addClass("has-error");
+      element.closest(".form-group").find(".help-block").text("<%= @val_msg["VL0001"] %>");
+      return false;
+    }
+    else if (input_kotoba.length > max_byte_length) {
+      element.closest(".form-group").addClass("has-error");
+      element.closest(".form-group").find(".help-block").text("<%= @val_msg["VL0003"] %>".replace("{0}", max_byte_length));
+      return false;
+    }
+    else if (!zenkaku_regex.test(input_kotoba)) {      
+      element.closest(".form-group").addClass("has-error");
+      element.closest(".form-group").find(".help-block").text("<%= @val_msg["VL0006"] %>");
+      return false;
+    }
+    else if (!validate_doshi_group(element, element_doshi_group, input_kotoba)) {
+      return false;
+    }
+    else {
+      element.closest(".form-group").removeClass("has-error"); 
+      element.closest(".form-group").find(".help-block").html("&nbsp;");
+      return true;
+    }
+  }
+
+  function validate_input_kotoba_hira(element, element_doshi_group) {
+    var max_byte_length = 50,
+        zenkaku_regex = /^$|^[ぁ-んァ-ン]+$/,
+        input_kotoba = element.val().trim();
+
+    if (input_kotoba == null || input_kotoba.length == 0) {
+      element.closest(".form-group").addClass("has-error");
+      element.closest(".form-group").find(".help-block").text("<%= @val_msg["VL0001"] %>");
+      return false;
+    }
+    else if (input_kotoba.length > max_byte_length) {
+      element.closest(".form-group").addClass("has-error");
+      element.closest(".form-group").find(".help-block").text("<%= @val_msg["VL0003"] %>".replace("{0}", max_byte_length));
+      return false;
+    }
+    else if (!zenkaku_regex.test(input_kotoba)) {      
+      element.closest(".form-group").addClass("has-error");
+      element.closest(".form-group").find(".help-block").text("<%= @val_msg["VL0008"] %>")
+      return false;
+    }
+    else if (!validate_doshi_group(element, element_doshi_group, input_kotoba)) {      
+      return false;
+    }
+    else {
+      element.closest(".form-group").removeClass("has-error"); 
+      element.closest(".form-group").find(".help-block").html("&nbsp;");
+      return true;
+    }
+  }
+
+  $("#henshu_form #input_kotoba_kj").change(function () {
+    validate_input_kotoba_kj($(this), $("#henshu_form #input_doshi_group"));
+  });
+
+  $("#henshu_form #input_kotoba_hira").change(function () {
+    validate_input_kotoba_hira($(this), $("#henshu_form #input_doshi_group"));
+  });
+
+  $("#henshu_form #input_doshi_group").change(function () {
+    $("#henshu_form #input_kotoba_kj").val("").focus().closest(".form-group").removeClass("has-error").closest(".form-group").find(".help-block").html("&nbsp;");
+    $("#henshu_form #input_kotoba_hira").val("").closest(".form-group").removeClass("has-error").closest(".form-group").find(".help-block").html("&nbsp;");
+  });
+
+  $("#henshu_form #hozon").click(function() {
+    if (validate_input_kotoba_kj($("#henshu_form #input_kotoba_kj"), $("#henshu_form #input_doshi_group")) && validate_input_kotoba_hira($("#henshu_form #input_kotoba_hira"), $("#henshu_form #input_doshi_group"))) {
+      $(this).prop("type", "submit");      
+
+      $("#henshu .box-body").after('<div class="overlay">' +
+                                    '<i class="fa fa-refresh fa-spin"></i>' +
+                                  '</div>');
+    }
+  });
+
+  $("#henshu_form #sakujo").click(function() {
+    $("#henshu .box-body").after('<div class="overlay">' +
+                            '<i class="fa fa-refresh fa-spin"></i>' +
+                          '</div>');
+  });
+
+  function validate_csv_file(element) {
+    var file_name = element.val(),
+        file_size = file_name ? element[0].files[0].size : 0,
+        fileExtension = ["csv"],
+        max_file_size = 2 * Math.pow(1024, 2); // 2MB
+
+    if (file_name == null || file_name.length == 0) {
+      element.closest(".form-group").addClass("has-error");
+      element.closest(".form-group").find(".help-block").text("<%= @val_msg["VL0001"] %>");
+      return false;
+    }
+    else if ($.inArray(file_name.split('.').pop().toLowerCase(), fileExtension) == -1) {
+      element.closest(".form-group").addClass("has-error");
+      element.closest(".form-group").find(".help-block").text("<%= @val_msg["VL0011"] %>".replace("{0}", fileExtension.join(", ")));
+      return false;
+    }
+    else if (file_size > max_file_size) {
+      element.closest(".form-group").addClass("has-error");
+      element.closest(".form-group").find(".help-block").text("<%= @val_msg["VL0012"] %>".replace("{0}", max_file_size / 1024 + "KB"));
+      return false;
+    }
+    else {
+      element.closest(".form-group").removeClass("has-error"); 
+      element.closest(".form-group").find(".help-block").html("&nbsp;");
+      return true;
+    }
+  }
+
+  $("#henshu_form #csv_file").change(function() {          
+    validate_csv_file($(this));
+  });
+
+  $("#henshu_form #upload").click(function() {          
+    if (validate_csv_file($("#henshu_form #csv_file"))) {
+      $(this).prop("type", "submit");
+
+      $("#henshu .box-body").after('<div class="overlay">' +
+                                    '<i class="fa fa-refresh fa-spin"></i>' +
+                                  '</div>');
+    }
+  });
+
+  $("#modoru").click(function() {
+      <%= flash[:auto_search] = cookies[:auto_search] %>
+      
+      var new_href = "<%= kotoba_kensaku_path %>?",
+          criteria = [];
+          auto_search = "<%= cookies[:auto_search] %>",
+          search_kotoba = "<%= cookies[:search_kotoba] %>",
+          search_doshi_group = "<%= cookies[:search_doshi_group] %>",
+          search_kei = "[<%= cookies[:search_kei] ? cookies[:search_kei].split("&").join(", ") : nil %>]";
+
+      criteria.push("auto_search=" + auto_search);
+
+      if (search_kotoba != "auto_search") {
+        criteria.push("search_kotoba=" + search_kotoba);
+      }
+
+      if (search_doshi_group.length > 0) {
+        criteria.push("search_doshi_group=" + search_doshi_group);
+      }
+
+      if (search_kei.length > 0) {
+        criteria.push("search_kei=" + search_kei);
+      }
+
+      $(this).attr("href", new_href + criteria.join("&"));
+  });
+</script>

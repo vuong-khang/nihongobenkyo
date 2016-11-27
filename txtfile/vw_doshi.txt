@@ -1,0 +1,76 @@
+ALTER VIEW vw_doshi AS
+
+SELECT
+	JISHO.index
+	,JISHO.kotoba_kj AS jishokei
+	,JISHO.kotoba_hira AS yomikata
+	,JISHO.group	
+	,MASU.kotoba_kj AS masukei
+	,MASU.kotoba_hira AS masukei_yomikata
+	,TE.kotoba_kj AS tekei
+	,TE.kotoba_hira AS tekei_yomikata
+    ,KAKO.kotoba_kj AS kakokei
+	,KAKO.kotoba_hira AS kakokei_yomikata
+    ,HITEI.kotoba_kj AS hiteikei
+	,HITEI.kotoba_hira AS hiteikei_yomikata
+    ,KANO.kotoba_kj AS kanokei
+	,KANO.kotoba_hira AS kanokei_yomikata
+    ,ISHI.kotoba_kj AS ishikei
+	,ISHI.kotoba_hira AS ishikei_yomikata
+    ,JYOKEN.kotoba_kj AS jyokenkei
+	,JYOKEN.kotoba_hira AS jyokenkei_yomikata
+    ,MEIREI.kotoba_kj AS meireikei
+	,MEIREI.kotoba_hira AS meireikei_yomikata
+    ,KINSHI.kotoba_kj AS kinshikei
+	,KINSHI.kotoba_hira AS kinshikei_yomikata
+    ,UKEMI.kotoba_kj AS ukemikei
+	,UKEMI.kotoba_hira AS ukemikei_yomikata
+    ,SHIEKI.kotoba_kj AS shiekikei
+	,SHIEKI.kotoba_hira AS shiekikei_yomikata
+    ,CASE
+		WHEN JISHO.group = 1 AND (SHIEKIUKEMI.kotoba_kj_1 IS NOT NULL AND LENGTH(SHIEKIUKEMI.kotoba_kj_1) > 0) THEN CONCAT(SHIEKIUKEMI.kotoba_kj_1, ' / ', SHIEKIUKEMI.kotoba_kj_2)
+		ELSE SHIEKIUKEMI.kotoba_kj_1
+	END AS shiekiukemikei
+	,CASE
+		WHEN JISHO.group = 1 AND (SHIEKIUKEMI.kotoba_hira_1 IS NOT NULL AND LENGTH(SHIEKIUKEMI.kotoba_hira_1) > 0) THEN CONCAT(SHIEKIUKEMI.kotoba_hira_1, ' / ', SHIEKIUKEMI.kotoba_hira_2)
+		ELSE SHIEKIUKEMI.kotoba_hira_1
+	END AS shiekiukemikei_yomikata
+	,JISHO.dt_create
+	,JISHO.dt_update
+FROM ma_jishokei JISHO
+
+LEFT JOIN ma_masukei MASU
+ON JISHO.index = MASU.index
+
+LEFT JOIN ma_tekei TE
+ON JISHO.index = TE.index
+
+LEFT JOIN ma_kakokei KAKO
+ON JISHO.index = KAKO.index
+
+LEFT JOIN ma_hiteikei HITEI
+ON JISHO.index = HITEI.index
+
+LEFT JOIN ma_kanokei KANO
+ON JISHO.index = KANO.index
+
+LEFT JOIN ma_ishikei ISHI
+ON JISHO.index = ISHI.index
+
+LEFT JOIN ma_jyokenkei JYOKEN
+ON JISHO.index = JYOKEN.index
+
+LEFT JOIN ma_meireikei MEIREI
+ON JISHO.index = MEIREI.index
+
+LEFT JOIN ma_kinshikei KINSHI
+ON JISHO.index = KINSHI.index
+
+LEFT JOIN ma_ukemikei UKEMI
+ON JISHO.index = UKEMI.index
+
+LEFT JOIN ma_shiekikei SHIEKI
+ON JISHO.index = SHIEKI.index
+
+LEFT JOIN ma_shiekiukemikei SHIEKIUKEMI
+ON JISHO.index = SHIEKIUKEMI.index

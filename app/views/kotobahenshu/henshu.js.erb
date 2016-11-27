@@ -1,0 +1,19 @@
+$("#message #show_message").append("<%= j (render 'henshu_message') %>")
+$("#show_message .alert").delay(3000).fadeOut();
+
+function reload_form() {
+	if ("<%= params[:mode] %>" == "<%= @shosa_mode[0]["value"] %>") {
+		$("#kotoba_henshu #input_kotoba_kj").val("").closest(".form-group").removeClass("has-error").closest(".form-group").find(".help-block").html("&nbsp;");
+		$("#kotoba_henshu #input_kotoba_hira").val("").closest(".form-group").removeClass("has-error").closest(".form-group").find(".help-block").html("&nbsp;");
+		$("#kotoba_henshu #input_doshi_group").val("1").closest(".form-group").removeClass("has-error").closest(".form-group").find(".help-block").html("&nbsp;");
+	}
+	else {
+		$("#kotoba_henshu #input_kotoba_kj").val("<%= @entity ? @entity.kotoba_kj : "" %>").closest(".form-group").removeClass("has-error").closest(".form-group").find(".help-block").html("&nbsp;");
+		$("#kotoba_henshu #input_kotoba_hira").val("<%= @entity ? @entity.kotoba_hira : "" %>").closest(".form-group").removeClass("has-error").closest(".form-group").find(".help-block").html("&nbsp;");
+		$("#kotoba_henshu #input_doshi_group").val("<%= @entity ? @entity.group : "" %>").closest(".form-group").removeClass("has-error").closest(".form-group").find(".help-block").html("&nbsp;");
+	}
+
+	$("#henshu .overlay").remove();
+}
+
+reload_form();

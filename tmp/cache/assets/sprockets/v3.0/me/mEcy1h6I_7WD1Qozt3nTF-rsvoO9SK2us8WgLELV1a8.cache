@@ -1,0 +1,53 @@
+{:uriI"šfile://app/assets/stylesheets/documentation/build/include/download.html?type=text/html&id=39d1208cb1205335699b4fd59da86aa4569651ebf7ae94298b9cd27fb5223106:ET:load_pathI"app/assets/stylesheets;T:filenameI"Eapp/assets/stylesheets/documentation/build/include/download.html;T:	nameI")documentation/build/include/download;T:logical_pathI".documentation/build/include/download.html;T:content_typeI"text/html;T:sourceI"<section id="download">
+  <h2 class="page-header"><a href="#download">Download</a></h2>
+  <p class="lead">
+    AdminLTE can be downloaded in two different versions, each appealing to different skill levels and use case.
+  </p>
+  <div class="row">
+    <div class="col-sm-6">
+      <div class="box box-primary">
+        <div class="box-header with-border">
+          <h3 class="box-title">Ready</h3>
+          <span class="label label-primary pull-right"><i class="fa fa-html5"></i></span>
+        </div><!-- /.box-header -->
+        <div class="box-body">
+          <p>Compiled and ready to use in production. Download this version if you don't want to customize AdminLTE's LESS files.</p>
+          <a href="http://almsaeedstudio.com/download/AdminLTE-dist" class="btn btn-primary"><i class="fa fa-download"></i> Download</a>
+        </div><!-- /.box-body -->
+      </div><!-- /.box -->
+    </div><!-- /.col -->
+    <div class="col-sm-6">
+      <div class="box box-danger">
+        <div class="box-header with-border">
+          <h3 class="box-title">Source Code</h3>
+          <span class="label label-danger pull-right"><i class="fa fa-database"></i></span>
+        </div><!-- /.box-header -->
+        <div class="box-body">
+          <p>All files including the compiled CSS. Download this version if you plan on customizing the template. <b>Requires a LESS compiler.</b></p>
+          <a href="http://almsaeedstudio.com/download/AdminLTE" class="btn btn-danger"><i class="fa fa-download"></i> Download</a>
+        </div><!-- /.box-body -->
+      </div><!-- /.box -->
+    </div><!-- /.col -->
+  </div><!-- /.row -->
+  <pre class="hierarchy bring-up"><code class="language-bash" data-lang="bash">File Hierarchy of the Source Code Package
+
+AdminLTE/
+â”œâ”€â”€ dist/
+â”‚   â”œâ”€â”€ CSS/
+â”‚   â”œâ”€â”€ JS
+â”‚   â”œâ”€â”€ img
+â”œâ”€â”€ build/
+â”‚   â”œâ”€â”€ less/
+â”‚   â”‚   â”œâ”€â”€ AdminLTE's Less files
+â”‚   â””â”€â”€ Bootstrap-less/ (Only for reference. No modifications have been made)
+â”‚       â”œâ”€â”€ mixins/
+â”‚       â”œâ”€â”€ variables.less
+â”‚       â”œâ”€â”€ mixins.less
+â””â”€â”€ plugins/
+    â”œâ”€â”€ All the customized plugins CSS and JS files</code></pre>
+</section>
+;T:metadata{	:dependencieso:Set:
+@hash{
+I"environment-version;TTI"environment-paths;TTI"rails-env;TTI"2processors:type=text/html&file_type=text/html;TTI"Sfile-digest://app/assets/stylesheets/documentation/build/include/download.html;TT:charsetI"
+utf-8;F:digest"% 3VƒZ±{aØŞrÄ¼K*Ë+¬dm´+™»^fÅÖ:lengthi:dependencies_digest"%|ŞOÜ†à—9L>]1ñHæO)œÅáÈÁÜ}%êR:idI"E39d1208cb1205335699b4fd59da86aa4569651ebf7ae94298b9cd27fb5223106;F:
+mtimel+2¡X

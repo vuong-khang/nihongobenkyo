@@ -1,0 +1,128 @@
+<%= provide(:title, "回数読み") %>
+
+<!-- Header content -->
+<section class="content-header">  
+  <h1><%= @page.select {|item| item["id"] == 2}[0]["title_jp"] %></h1>
+
+  <ol class="breadcrumb">
+    <li><%= link_to "<i class='fa fa-home'></i> ホーム".html_safe, home_path %> </li>
+    <li class="active"><%= @page.select {|item| item["id"] == 2}[0]["title_jp"] %></li>
+  </ol>
+</section>
+    
+<!-- Main content -->
+<section class="content">
+  <div class="row" id="condition">
+    <div class="col-md-12">
+      <div class="box box-primary">
+        <div class="box-header with-border">
+          <h3 class="box-title"><strong>検索条件</strong></h3>
+          <%= flash[:search_kei] %>
+          <div class="box-tools pull-right">
+            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+            </button>
+          </div>
+        </div>
+  	    <div class="box-body">
+          <div class="row">
+        	  <div class="col-md-4"></div>
+            <div class="col-md-4">
+              <div class="form-group">
+               	<label for="kaisu">回数</label>
+          	    <%= text_field_tag :kaisu, params[:kaisu], class: "form-control input-lg text-right ime-disabled", placeholder: "#{@app_msg["AP0005"]}" %>
+                <span class="help-block">&nbsp;</span>
+              </div>              
+            </div>
+            <div class="col-md-4"></div>   
+          </div>
+        </div>
+
+        <div class="box-footer">
+          <div class="pull-right">
+          　　<%= link_to "<i class='fa fa-caret-square-o-right'></i> 読む".html_safe, kaisuyomi_path, id:"yomu", class: "btn btn-primary", remote: true %>               
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row" id="result">
+    <div class="col-md-12">
+      <div class="box box-primary">
+        <div class="box-header with-border">
+          <h3 class="box-title"><strong>結果</strong></h3>
+          <div class="box-tools pull-right">
+            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+            </button>
+          </div>
+        </div>
+        <div class="box-body" id="show_result">
+          <span id="MS0002"><%= "#{@base_msg["MS0002"]}" %></span>          
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row" id="message">
+    <div class="col-md-12">
+      <div id="show_message" class="float-on-outer"></div>
+    </div>
+  </div>
+</section>
+
+<script>
+  $(".sidebar-menu #<%= @page.select {|item| item["id"] == 2}[0]["id"] %>").addClass("active");
+
+  $("#condition #kaisu").focus();
+
+  $("#result #show_result #MS0002").text($("#result #show_result #MS0002").text().replace("{0}", $("#condition #yomu").text()));
+
+  function validate_kaisu(element) {
+    var int_regex = /^\d+$/,
+        kaisu = element.val().trim().replace(/,/g, ''),
+        limit = [<%= @limit[0].to_s %>, <%= @limit[1].to_s %>];
+
+    if (kaisu == null || kaisu.length == 0) {
+      element.closest(".form-group").addClass("has-error");
+      element.siblings(".help-block").text("<%= @val_msg["VL0001"] %>");
+      return false;
+    }
+    else if (!int_regex.test(kaisu)) {
+      element.closest(".form-group").addClass("has-error"); 
+      element.siblings(".help-block").text("<%= @val_msg["VL0004"] %>");
+      return false;
+    }
+    else if (kaisu < <%= @limit[0] %> || kaisu > <%= @limit[1] %>) {
+      element.closest(".form-group").addClass("has-error"); 
+      element.siblings(".help-block").text("<%= @val_msg["VL0005"] %>".replace("{0}", limit[0]).replace("{1}", limit[1]));
+      return false; 
+    }
+    else {
+      element.closest(".form-group").removeClass("has-error"); 
+      element.siblings(".help-block").html("&nbsp;");
+      element.val(format_number(kaisu));
+      return true;
+    }
+  }
+
+  $("#condition #kaisu").change(function () {
+    validate_kaisu($(this));
+  });
+
+	$("#condition #yomu").click(function() {
+    if (validate_kaisu($("#condition #kaisu"))) {
+      var new_href = "<%= kaisuyomi_path %>?",
+          criteria = [];
+          kaisu = $("#condition #kaisu").val().trim().replace(/,/g, '');
+    
+      criteria.push("auto_search=true");
+
+      if (kaisu != "") {
+        criteria.push("kaisu=" + kaisu);
+      }
+
+      $(this).attr("href", new_href + criteria.join("&"));
+      $(this).find("i").removeClass("fa-caret-square-o-right").addClass("fa-spinner");
+    }
+  });
+</script>

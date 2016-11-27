@@ -1,0 +1,8 @@
+if ($("#condition .has-error").length == 0) {
+	$("#result #show_result").html("<%= j (render 'yomi_kekka') %>")
+
+	$("#condition #yomu").find("i").removeClass("fa-spinner").addClass("fa-caret-square-o-right");
+}
+else {
+	$("#condition #yomu").find("i").removeClass("fa-spinner").addClass("fa-caret-square-o-right");
+}

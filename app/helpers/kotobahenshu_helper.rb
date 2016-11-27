@@ -1,0 +1,2 @@
+module KotobahenshuHelper
+end

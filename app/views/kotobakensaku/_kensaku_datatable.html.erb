@@ -1,0 +1,85 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="btn-group">
+      <%= link_to "<i class='fa fa-plus'></i> 追加".html_safe, kotoba_henshu_path(mode: @shosa_mode[0]["value"]), id:"tsuika", class: "btn btn-default btn-sm" %>
+      <%= link_to "<i class='fa fa-trash'></i> 選択削除".html_safe, kotoba_sentaku_sakujyo_path, id:"sentaku_sakujyo", class: "btn btn-default btn-sm disabled", remote: true %>
+      <div class="btn-group" id="shutsuryoku">
+        <%= link_to "<i class='fa fa-download'></i> 出力".html_safe, "", id:"btn_shutsuryoku", class: "btn btn-default btn-sm" %>
+        <%= link_to "", :data => { :toggle => "dropdown" }, id:"arrow_shutsuryoku", class: "btn btn-default btn-sm dropdown-toggle disabled" do %>
+          <span class="caret"></span>
+          <span class="sr-only">Toggle Dropdown</span>
+        <% end %>
+        <ul class="dropdown-menu" role="menu">
+          <li><%= link_to "<i class='fa fa-file-text-o'></i> CSV".html_safe, kotoba_csv_shutsuryoku_path(format: "csv"), id:"csv_shutsuryoku" %></li>
+          <li><%= link_to "<i class='fa fa-file-excel-o'></i> エクセル".html_safe, kotoba_excel_shutsuryoku_path(format: "xlsx"), id:"excel_shutsuryoku" %></li>
+        </ul>
+      </div>      
+    </div>
+  </div>
+</div>
+
+<div class="row" style="height: 25px">
+</div>
+
+<div class="row">
+  <div class="col-md-12">  
+    <table class="table table-striped table-hover dataTable" width="100%">
+      <thead>
+        <tr>
+          <th style="min-width: 30px; max-width: 30px">修正</th>
+          <th style="min-width: 50px; max-width: 50px">
+            <%= check_box_tag("zen_sentaku") %>
+            選択
+          </th>
+          <th style="min-width: 100px">言葉<%= "（" + @doshi_kei[0]["title_jp"] + "）" %></th>
+          <th style="min-width: 130px">読み方</th>
+          <th style="min-width: 70px; max-width: 70px">グループ</th>
+          <% if !cookies[:search_kei].nil? %>
+            <% cookies[:search_kei].each do |item| %>
+              <% @doshi_kei[1, @doshi_kei.size - 2].each do |kei| %>
+                <% if item == kei["value"] %>
+                <th style="min-width: 100px"><%= kei["title_jp"] %></th>
+                <% end %>
+              <% end %>
+              <% @doshi_kei[12, 1].each do |kei| %>
+                <% if item == kei["value"] %>
+                <th style="min-width: 180px"><%= kei["title_jp"] %></th>
+                <% end %>
+              <% end %>
+            <% end %>
+          <% end %>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% @kekka.each do |kekka| %>      
+          <tr>
+            <td>
+              <%= link_to "<i class='fa fa-edit'></i>".html_safe, kotoba_henshu_path(mode: @shosa_mode[1]["value"], index: kekka.index), id:"shusei" %>
+              <%= hidden_field_tag 'index', kekka.index %>
+            </td>
+            <td>
+              <%= check_box_tag('sentaku[]') %>
+            </td>
+            <td><%= kekka.jishokei %></td>
+            <td><%= kekka.yomikata %></td>
+            <td><%= @doshi_group.select {|item| item["value"] == kekka.group.to_s}[0]["title_jp"] %></td>
+            <% if !cookies[:search_kei].nil? %>
+              <% cookies[:search_kei].each do |item| %>
+                <% @doshi_kei.drop(1).each do |kei| %>
+                  <% if item == kei["value"] %>
+                  <td>
+                    <span data-toggle="tooltip" data-placement="bottom" title="" data-original-title="<%= kekka["#{kei["text"]}" + "_yomikata"] %>">
+                    <%= kekka["#{kei["text"]}"] %>
+                    </span> 
+                  </td>
+                  <% end %>
+                <% end %>
+              <% end %>
+            <% end %>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -1,0 +1,65 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  index: MyString
+  jishokei: MyString
+  yomikata: MyString
+  group: 1
+  masukei: MyString
+  masukei_yomikata: MyString
+  tekei: MyString
+  tekei_yomikata: MyString
+  kakokei: MyString
+  kakokei_yomikata: MyString
+  hiteikei: MyString
+  hiteikei_yomikata: MyString
+  kanokei: MyString
+  kanokei_yomikata: MyString
+  ishikei: MyString
+  ishikei_yomikata: MyString
+  jyokenkei: MyString
+  jyokenkei_yomikata: MyString
+  meireikei: MyString
+  meireikei_yomikata: MyString
+  kinshikei: MyString
+  kinshikei_yomikata: MyString
+  ukemikei: MyString
+  ukemikei_yomikata: MyString
+  shiekikei: MyString
+  shiekikei_yomikata: MyString
+  shiekiukemi: MyString
+  shiekiukemi_yomikata: MyString
+  dt_create: 2016-11-16 00:23:50
+  dt_update: 2016-11-16 00:23:50
+
+two:
+  index: MyString
+  jishokei: MyString
+  yomikata: MyString
+  group: 1
+  masukei: MyString
+  masukei_yomikata: MyString
+  tekei: MyString
+  tekei_yomikata: MyString
+  kakokei: MyString
+  kakokei_yomikata: MyString
+  hiteikei: MyString
+  hiteikei_yomikata: MyString
+  kanokei: MyString
+  kanokei_yomikata: MyString
+  ishikei: MyString
+  ishikei_yomikata: MyString
+  jyokenkei: MyString
+  jyokenkei_yomikata: MyString
+  meireikei: MyString
+  meireikei_yomikata: MyString
+  kinshikei: MyString
+  kinshikei_yomikata: MyString
+  ukemikei: MyString
+  ukemikei_yomikata: MyString
+  shiekikei: MyString
+  shiekikei_yomikata: MyString
+  shiekiukemi: MyString
+  shiekiukemi_yomikata: MyString
+  dt_create: 2016-11-16 00:23:50
+  dt_update: 2016-11-16 00:23:50

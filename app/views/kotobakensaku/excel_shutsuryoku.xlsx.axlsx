@@ -1,0 +1,27 @@
+wb = xlsx_package.workbook
+
+@file = File.read("data/settings/data_settings.js")
+@doshi_kei = JSON.parse(@file)["doshi_kei"]
+@doshi_group = JSON.parse(@file)["doshi_group"]
+
+wb.styles do |style|
+  @arr_kekka.each do |item|
+    wb.add_worksheet(name: item[:group]["title_jp"]) do |sheet|
+      header = style.add_style alignment: {horizontal: :center}, b: true, border: {style: :thin, color: "5b9bd5"}, bg_color: "5b9bd5", fg_color: "ffffff"      
+      odd_detail = style.add_style border: {style: :thin, color: "5b9bd5"}
+      even_detail = style.add_style border: {style: :thin, color: "5b9bd5"}, bg_color: "ddebf7"
+
+      @arr_kei_title = []
+      @arr_kei_title.push(@doshi_kei[0]["title_jp"])
+      @arr_kei_title.push("読み方")
+      @doshi_kei.drop(1).each do |kei|
+        @arr_kei_title.push(kei["title_jp"])
+      end
+      sheet.add_row @arr_kei_title, style: header
+
+      item[:kekka].each_with_index do |kekka, index|        
+        sheet.add_row [kekka.jishokei, kekka.yomikata, kekka.masukei, kekka.tekei, kekka.kakokei, kekka.hiteikei, kekka.kanokei, kekka.ishikei, kekka.jyokenkei, kekka.meireikei, kekka.kinshikei, kekka.ukemikei, kekka.shiekikei, kekka.shiekiukemikei], style: index % 2 == 1 ? odd_detail : even_detail, :widths=>[15, 20, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 40]
+      end
+    end
+  end
+end

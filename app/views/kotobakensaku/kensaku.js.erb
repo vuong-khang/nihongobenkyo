@@ -1,0 +1,90 @@
+if ($("#condition .has-error").length == 0) {
+  $("#result #show_result").html("<%= j (render 'kensaku_datatable') %>")
+
+  if ("<%= @message %>".length > 0) {
+    $("#message #show_message").append("<%= j (render 'kensaku_message') %>");
+    $("#show_message .alert").delay(3000).fadeOut();
+  }
+
+  $("#condition #kensaku").find("i").removeClass("fa-spinner").addClass("fa-search");
+
+  if ($("#condition .btn-box-tool .fa").hasClass("fa-minus")) {
+      $("#condition .btn-box-tool").click();
+  }
+
+  if ($("#result .btn-box-tool .fa").hasClass("fa-plus")) {
+      $("#result .btn-box-tool").click();
+  }
+
+  $("#result .table").DataTable({
+  	"scrollX": true,
+  	"sScrollY": window.innerHeight - 260,
+  	"paging": true,
+  	"lengthChange": true,
+  	"lengthMenu": [[10, 25, 50, 75, 100, -1], [10, 25, 50, 75, 100, "All"]],
+  	"searching": true,
+  	"ordering": true,
+  	"info": true,
+  	"autoWidth": false,	
+  	"columnDefs": [{
+  	  "defaultContent": "-",
+  	  "targets": "_all"
+  	}],
+   	"columnDefs": [{
+        	"targets": [0, 1],
+        	"orderable": false,
+      }],
+      "auto": true
+  });
+
+  $("#result #sentaku_sakujyo").click(function() {
+      var new_href = "<%= kotoba_sentaku_sakujyo_path %>?",
+    	    criteria = [],
+          sentaku = $("#result #sentaku_:checked").map(function () {
+                       	return $(this).closest("tr").find("#index").val();
+                 		}).get();
+
+      if (sentaku.length > 0) {
+        criteria.push("sentaku=" + JSON.stringify(sentaku));
+      }
+
+      $(this).attr("href", new_href + criteria.join("&"));
+    });
+
+  $("#result #zen_sentaku").change(function () {
+      $("#result #sentaku_:checkbox").prop("checked", $(this).prop("checked"));
+      $("#result #sentaku_:checkbox:checked").length > 0 ? $("#result #sentaku_sakujyo").removeClass("disabled") : $("#result #sentaku_sakujyo").addClass("disabled");
+  });
+
+  $("#result #sentaku_").change(function () {
+    $("#result #zen_sentaku").prop("checked", $("#result #sentaku_:checkbox:checked").length == $("#result #sentaku_:checkbox").length);
+    $("#result #sentaku_:checkbox:checked").length > 0 ? $("#result #sentaku_sakujyo").removeClass("disabled") : $("#result #sentaku_sakujyo").addClass("disabled");
+  });
+
+  $("#result #sentaku_sakujyo").click(function() {
+    var row_select_max = 50;
+
+    if ($("#result #sentaku_:checkbox:checked").length > row_select_max) {
+      $(".modal-danger").modal('toggle');
+      $(".modal-danger .modal-dialog").css("top", window.innerHeight / 4);
+      $(".modal-danger .modal-dialog .modal-body #message").text("<%= @app_msg['AP0006'] %>".replace('{0}', row_select_max));
+    }
+    else {
+      $("#result .box-body").after('<div class="overlay">' +
+                                    '<i class="fa fa-refresh fa-spin"></i>' +
+                                  '</div>');
+    }
+  });
+
+  if (<%= @kekka.length %> > 0) {
+    $("#result #shutsuryoku #btn_shutsuryoku").removeClass("disabled");
+    $("#result #shutsuryoku #arrow_shutsuryoku").removeClass("disabled");
+  }
+  else {
+    $("#result #shutsuryoku #btn_shutsuryoku").addClass("disabled");
+    $("#result #shutsuryoku #arrow_shutsuryoku").addClass("disabled");
+  }
+}
+else {
+  $("#condition #kensaku").find("i").removeClass("fa-spinner").addClass("fa-caret-square-o-right");
+}

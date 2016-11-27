@@ -1,0 +1,16 @@
+{:uriI"ôfile://app/assets/stylesheets/documentation/build/include/license.html?type=text/html&id=0fd039fa85e93388d14793d98bda142c86d97f3eb150bbf89ff9441719d608c3:ET:load_pathI"app/assets/stylesheets;T:filenameI"Dapp/assets/stylesheets/documentation/build/include/license.html;T:	nameI"(documentation/build/include/license;T:logical_pathI"-documentation/build/include/license.html;T:content_typeI"text/html;T:sourceI"Ë<section id="license">
+  <h2 class="page-header"><a href="#license">License</a></h2>
+  <h3>AdminLTE</h3>
+  <p class="lead">
+    AdminLTE is an open source project that is licensed under the <a href="http://opensource.org/licenses/MIT">MIT license</a>.
+    This allows you to do pretty much anything you want as long as you include
+    the copyright in "all copies or substantial portions of the Software."
+    Attribution is not required (though very much appreciated).
+  </p>
+</section>
+;T:metadata{	:dependencieso:Set:
+@hash{
+I"environment-version;TTI"environment-paths;TTI"rails-env;TTI"2processors:type=text/html&file_type=text/html;TTI"Rfile-digest://app/assets/stylesheets/documentation/build/include/license.html;TT:charsetI"
+utf-8;F:digest"%Nö–£üºöÛ7R‚b'lküÇSªSvå
++z¸:lengthiË:dependencies_digest"%È	\·~ônê3 ø‡•◊¯X¥0Nãôø›Tñ»'d:idI"E0fd039fa85e93388d14793d98bda142c86d97f3eb150bbf89ff9441719d608c3;F:
+mtimel+2°X

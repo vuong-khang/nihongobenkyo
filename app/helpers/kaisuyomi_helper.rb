@@ -1,0 +1,2 @@
+module KaisuyomiHelper
+end

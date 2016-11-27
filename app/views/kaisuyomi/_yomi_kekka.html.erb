@@ -1,0 +1,26 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="row">
+      <% @arr_kekka.each do |item| %>
+      <div class="col-md-4">
+        <div class="box box-primary box-solid">
+          <div class="box-header with-border">
+            <h3 class="box-title"><%= item[:gengo]["title_jp"] %></h3>
+          </div>
+          <div class="box-body" style="min-height: 120px">
+            <% if item[:gengo]["value"] == @gengo[1]["value"] %>
+              <strong>漢字：</strong>
+              <%= item[:kekka][:kanji] %>
+              <br>
+              <strong>ひらがな：</strong>
+              <%= item[:kekka][:hira] %>
+            <% else %>
+              <%= item[:kekka] %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+      <% end %>
+    </div>
+  </div>
+</div>

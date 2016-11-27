@@ -1,0 +1,13 @@
+<aside class="main-sidebar">
+  <section class="sidebar">
+    <!-- Sidebar menu -->
+    <ul class="sidebar-menu">
+      <li class="header">主航法</li>
+      <% @page.each do |item| %>
+      <li id="<%= item['id'] %>">
+        <%= link_to "<i class='fa #{item["icon"]}'></i> #{item["title_jp"]}".html_safe, eval(item["path"]) %>
+      </li>
+      <% end %>
+    </ul>
+  </section>
+</aside>

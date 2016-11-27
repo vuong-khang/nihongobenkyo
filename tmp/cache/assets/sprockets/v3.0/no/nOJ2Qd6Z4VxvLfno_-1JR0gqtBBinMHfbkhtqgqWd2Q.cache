@@ -1,0 +1,17 @@
+{:uriI"ïfile://app/assets/stylesheets/documentation/build/include/faq.html?type=text/html&id=2f12efe0d75d49970bd6b25188e589992203369e375f4dfad2d02176aef53482:ET:load_pathI"app/assets/stylesheets;T:filenameI"@app/assets/stylesheets/documentation/build/include/faq.html;T:	nameI"$documentation/build/include/faq;T:logical_pathI")documentation/build/include/faq.html;T:content_typeI"text/html;T:sourceI"´<section id="faq">
+  <h2 class="page-header"><a href="#faq">FAQ</a></h2>
+  <h3>Can AdminLTE be used with Wordpress?</h3>
+  <p class="lead">AdminLTE is an HTML template that can be used for any purpose. However, it is not made to be easily installed on Wordpress. It will require some effort and enough knowledge of the Wordpress script to do so.</p>
+
+  <h3>Is there an integration guide for PHP frameworks such as Yii or Symfony?</h3>
+  <p class="lead">Short answer, no. However, there are forks and tutorials around the web that provide info on how to integrate with many different frameworks. There are even versions of AdminLTE that are integrated with jQuery ajax, AngularJS and/or MVC5 ASP .NET.</p>
+
+  <h3>How do I get notified of new AdminLTE versions?</h3>
+  <p class="lead">The best option is to subscribe to our mailing list using the <a href="http://almsaeedstudio.com/#subscribe">subscription form on Almsaeed Studio</a>.
+    If that's not appealing to you, you may watch the <a href="https://github.com/almasaeed2010/AdminLTE">repository on Github</a> or visit <a href="http://almsaeedstudio.com">Almsaeed Studio</a> every now and then for updates and announcements.</p>
+</section>
+;T:metadata{	:dependencieso:Set:
+@hash{
+I"environment-version;TTI"environment-paths;TTI"rails-env;TTI"2processors:type=text/html&file_type=text/html;TTI"Nfile-digest://app/assets/stylesheets/documentation/build/include/faq.html;TT:charsetI"
+utf-8;F:digest"%◊—Zqrf∏ª¡é\Æ!π„ï˝‡‹ê˚¿=cq\qÊ:lengthi´:dependencies_digest"% ª%ùàh)ó~›Ω^(¢™∞ë—€cyÔ25¯ò∆'øê∏:idI"E2f12efe0d75d49970bd6b25188e589992203369e375f4dfad2d02176aef53482;F:
+mtimel+2°X

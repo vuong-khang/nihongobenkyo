@@ -1,0 +1,17 @@
+{:uriI"öfile://app/assets/stylesheets/documentation/build/include/browsers.html?type=text/html&id=49fa8c7f6b3ab72445101efab7ac910ac10b994003adfd48aee2835cfd021655:ET:load_pathI"app/assets/stylesheets;T:filenameI"Eapp/assets/stylesheets/documentation/build/include/browsers.html;T:	nameI")documentation/build/include/browsers;T:logical_pathI".documentation/build/include/browsers.html;T:content_typeI"text/html;T:sourceI"Ÿ<section id="browsers">
+  <h2 class="page-header"><a href="#browsers">Browser Support</a></h2>
+  <p class="lead">AdminLTE supports the following browsers:</p>
+  <ul>
+    <li>IE9+</li>
+    <li>Firefox (latest)</li>
+    <li>Safari (latest)</li>
+    <li>Chrome (latest)</li>
+    <li>Opera (latest)</li>
+  </ul>
+  <p><b>Note:</b> IE9 does not support transitions or animations. The template will function properly but it won't use animations/transitions on IE9.</p>
+</section>
+;T:metadata{	:dependencieso:Set:
+@hash{
+I"environment-version;TTI"environment-paths;TTI"rails-env;TTI"2processors:type=text/html&file_type=text/html;TTI"Sfile-digest://app/assets/stylesheets/documentation/build/include/browsers.html;TT:charsetI"
+utf-8;F:digest"%T±ÕZ¡h≠úIrçqw)r®î¶ÙK—>c⁄¿R€2:lengthiŸ:dependencies_digest"%ÉwxÈu¡*~9ﬁS≈∂;Î'J1¶~)¥≈JVj÷:idI"E49fa8c7f6b3ab72445101efab7ac910ac10b994003adfd48aee2835cfd021655;F:
+mtimel+2°X

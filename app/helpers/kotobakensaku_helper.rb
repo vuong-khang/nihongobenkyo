@@ -1,0 +1,2 @@
+module KotobakensakuHelper
+end

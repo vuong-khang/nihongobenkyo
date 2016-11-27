@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title><%= gettitle(yield(:title)) %></title>
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+  <%= csrf_meta_tags %>
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+
+  <script>
+    function getParameterByName(name, url) {
+      if (!url) {
+        url = window.location.href;
+      }
+
+      name = name.replace(/[\[\]]/g, "\\$&");
+      var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+          results = regex.exec(url);
+
+      if (!results) return null;
+      if (!results[2]) return '';
+      return decodeURIComponent(results[2].replace(/\+/g, " "));
+    }
+  </script>
+</head>
+
+<body class="skin-blue sidebar-mini">
+<div class="wrapper">
+  <!-- Main header -->
+  <%= render "layouts/main_header" %>
+
+  <!-- Main left sidebar -->
+  <%= render "layouts/main_sidebar" %>
+
+  <!-- Content erapper -->
+  <div class="content-wrapper">
+    <script>
+       $(".content-wrapper").css("min-height", window.innerHeight - 101);
+    </script>
+  	<%= yield %>
+  </div>
+
+  <!-- Main footer -->
+  <%= render 'layouts/main_footer' %>
+
+  <!-- Control Sidebar -->
+  <%= render 'layouts/control_sidebar' %>
+</div>
+<!-- ./wrapper -->
+</body>
+</html>
+
+<script>
+  function format_number(number) {
+    return number.replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+  }
+</script>
